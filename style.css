@@ -1,0 +1,299 @@
+/* Базовые сбросы и стили мобильного приложения */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+    --primary: #1a73e8;
+    --primary-dark: #1557b0;
+    --whatsapp: #25D366;
+    --telegram: #0088cc;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #1f1f1f;
+    --text-secondary: #5f6368;
+    --border-radius: 16px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05);
+}
+
+body {
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 12px;
+    padding-bottom: 90px; /* для нижнего бара */
+}
+
+/* Контейнер всего приложения (имитация окна телефона на ПК) */
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bg);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.06);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+}
+
+/* При ПК разрешении – чтобы красиво в окне */
+@media (min-width: 768px) {
+    body {
+        padding: 24px;
+        background: #e8eaed;
+    }
+    .app-container {
+        border-radius: 32px;
+        box-shadow: 0 30px 50px rgba(0,0,0,0.15), 0 10px 25px rgba(0,0,0,0.1);
+        min-height: 85vh;
+    }
+}
+
+/* Шапка */
+.header {
+    background: var(--card);
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo h1 {
+    font-size: 1.5rem;
+    color: var(--text);
+    font-weight: 700;
+}
+.tagline {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+.icon-btn {
+    background: var(--bg);
+    border: none;
+    font-size: 1.5rem;
+    padding: 8px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* Карточки */
+.card {
+    background: var(--card);
+    border-radius: var(--border-radius);
+    padding: 18px;
+    margin: 12px 16px;
+    box-shadow: var(--shadow);
+}
+
+/* Профиль мастера */
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.avatar {
+    font-size: 3.5rem;
+    background: #e3f2fd;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.master-info h2 {
+    font-size: 1.3rem;
+    color: var(--text);
+}
+.rating {
+    color: #fbbc04;
+    font-weight: 600;
+}
+.exp {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Сетка кнопок действий */
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 6px 16px 12px;
+}
+.action-btn {
+    background: var(--card);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 14px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    font-size: 0.9rem;
+}
+.action-btn:active {
+    transform: scale(0.97);
+}
+.action-btn .icon {
+    font-size: 1.8rem;
+}
+.action-btn small {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+.call-btn { border-bottom: 4px solid var(--primary); }
+.whatsapp-btn { border-bottom: 4px solid var(--whatsapp); }
+.telegram-btn { border-bottom: 4px solid var(--telegram); }
+.request-btn { border-bottom: 4px solid #ff9800; }
+
+/* Услуги */
+.services-card h3 {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+.service-item:last-child {
+    border-bottom: none;
+}
+.price {
+    font-weight: 700;
+    color: var(--primary);
+    background: #e8f0fe;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+.badge {
+    background: #e6f4ea;
+    color: #137333;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+.badge.free {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+/* Срочный блок */
+.urgency-card {
+    background: #fef7e0;
+    color: #5f4b00;
+    font-size: 0.95rem;
+}
+.address {
+    font-size: 0.8rem;
+    color: #5f6368;
+    margin-top: 4px;
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 10px 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    border-radius: 24px 24px 0 0;
+    z-index: 20;
+}
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.7rem;
+    color: #5f6368;
+    padding: 4px 12px;
+    border-radius: 20px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.nav-item.active {
+    color: var(--primary);
+    background: #e8f0fe;
+    font-weight: 600;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+.modal.active {
+    display: flex;
+}
+.modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.modal-content input, .modal-content textarea {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dadce0;
+    font-size: 1rem;
+}
+.primary-btn {
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.secondary-btn {
+    background: transparent;
+    border: none;
+    color: #5f6368;
+    padding: 8px;
+}

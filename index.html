@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ремонт техники - Сервисный центр Нижнекамск</title>
+    <style>
+        /* ========== БАЗОВЫЕ СБРОСЫ И ШРИФТЫ ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+            
+            /* ===== ФОН С КАРТИНКОЙ И РАЗМЫТИЕМ ===== */
+            min-height: 100vh;
+            background-image: url('https://sun9-19.vkuserphoto.ru/s/v1/ig2/79t1b1LVXKq8jdCkmU4DxWQFvLnawnfnpPsJ0NmR0xuQaIsUQqr9brPdtK5g11d4IKPwGbsDfOV9GagEqNY5ET7X.jpg?quality=95&as=32x17,48x26,72x39,108x59,160x87,240x131,360x196,480x262,540x295,640x349,720x393,1080x589,1280x698,1408x768&from=bu&u=ZSfB_DtR_j2_tt2XVDjq6LuZ1ISNN19L8fJnqFyeXa8&cs=1408x0');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Псевдоэлемент для размытия фона */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -2;
+            background-image: inherit;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            filter: blur(6px);
+            transform: scale(1.02);
+        }
+
+        /* Затемнение для читаемости текста */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Контейнер — ограничивает ширину на ПК и центрирует */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========== КОМПОНЕНТЫ ========== */
+        .btn {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .btn:hover {
+            background: #004c99;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,102,204,0.3);
+        }
+        .btn-large {
+            padding: 16px 40px;
+            font-size: 1.2rem;
+        }
+
+        /* Сетка карточек — адаптивная */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            text-align: center;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
+        }
+
+        /* Шапка */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 16px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0066cc, #00a3cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .address {
+            color: #2d36bd;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .phone {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        /* Герой-блок с быстрой формой */
+        .hero {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #d4e6ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        /* Быстрая форма заявки на видном месте */
+        .quick-form {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .quick-form h3 {
+            color: white;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+        .quick-form .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .quick-form input, .quick-form select, .quick-form textarea {
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: none;
+            font-size: 1rem;
+            background: white;
+            min-width: 200px;
+        }
+        .quick-form textarea {
+            border-radius: 30px;
+            min-width: 300px;
+            resize: vertical;
+        }
+        .quick-form input:focus, .quick-form select:focus, .quick-form textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.4);
+        }
+        
+        .features-badge {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .badge-item {
+            background: rgba(238, 242, 255, 0.95);
+            backdrop-filter: blur(4px);
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        /* Этапы — более наглядные */
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 50px 0;
+        }
+        .step {
+            flex: 1;
+            min-width: 160px;
+            max-width: 200px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 25px 15px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+        }
+        .step:hover {
+            transform: translateY(-8px);
+            background: white;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #0066cc;
+            color: white;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        .step h4 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #0066cc;
+        }
+        .step p {
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        /* Отзывы — как настоящие */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .review-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+        .review-card:hover {
+            transform: translateY(-5px);
+            background: white;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .review-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0066cc, #00a3cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        .review-info {
+            flex: 1;
+        }
+        .review-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+        .review-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .review-rating {
+            color: #fbbf24;
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+        .review-text {
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .review-device {
+            display: inline-block;
+            background: #eef2ff;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #0066cc;
+        }
+        .admin-reply {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+        .admin-reply strong {
+            color: #0066cc;
+        }
+
+        /* Форма обратной связи */
+        .form-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 45px;
+            text-align: center;
+            margin: 50px 0;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+        }
+        .form-card h2 {
+            color: #1e293b;
+            text-shadow: none;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        input, select, textarea {
+            width: 100%;
+            max-width: 500px;
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            transition: 0.2s;
+            background: white;
+        }
+        textarea {
+            border-radius: 30px;
+            resize: vertical;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.2);
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Тост */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            z-index: 1000;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #e2e8f0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 40px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 680px) {
+            .header-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            .step {
+                max-width: 100%;
+                width: 100%;
+            }
+            .quick-form .form-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .quick-form input, .quick-form select, .quick-form textarea {
+                width: 90%;
+            }
+            .form-card {
+                padding: 30px 20px;
+            }
+            .btn {
+                padding: 10px 20px;
+            }
+            .review-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-inner">
+        <div class="logo">🔧 Ремонт Любой техники</div>
+        <div class="address">Нижнекамск</div>
+        <a href="tel:+79872603630" class="phone">+7 987 260-36-30</a>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <div class="hero">
+            <h1>Ремонт техники <br>в день обращения</h1>
+            <div class="features-badge">
+                <span class="badge-item">✅ Бесплатная диагностика</span>
+                <span class="badge-item">🔧 Гарантия до 12 мес</span>
+            </div>
+        </div>
+
+        <!-- БЫСТРАЯ ФОРМА ЗАЯВКИ — ВИДНА СРАЗУ -->
+        <div class="quick-form">
+            <h3>🚀 Оставьте заявку прямо сейчас</h3>
+            <form id="quickForm">
+                <div class="form-row">
+                    <input type="text" id="quickName" placeholder="Ваше имя" required>
+                    <input type="tel" id="quickPhone" placeholder="+7 (___) ___-__-__" required>
+                </div>
+                <div class="form-row">
+                    <select id="quickDevice">
+                        <option value="">Выберите технику или системную ошибку</option>
+                        <option>Смартфон / Системная ошибка</option>
+                        <option>Ноутбук / Системная ошибка</option>
+                        <option>Компьютер / Системная ошибка</option>
+                        <option>Телевизор / Настройка каналов / Системная ошибка</option>
+                        <option>Роутер / Настройка роутера</option>
+                        <option>Другое</option>
+                    </select>
+                    <input type="text" id="quickProblem" placeholder="Что сломано? (кратко)">
+                </div>
+                <div class="form-row">
+                    <textarea id="quickDesc" rows="2" placeholder="Опишите проблему подробнее..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-large">Отправить заявку →</button>
+            </form>
+        </div>
+
+        <!-- Преимущества (карточки) -->
+        <div class="grid">
+            <div class="card">📦 <h3>Доставка</h3><p>Курьер заберет технику и привезет обратно бесплатно</p></div>
+            <div class="card">🛡️ <h3>Гарантия</h3><p>До 12 месяцев на все услуги</p></div>
+            <div class="card">💰 <h3>Скидка 20%</h3><p>При записи с сайта</p></div>
+            <div class="card">⚙️ <h3>Склад запчастей</h3><p>Оригинальные детали в наличии</p></div>
+        </div>
+
+        <!-- Этапы работы — улучшенные -->
+        <h2>📋 Этапы сотрудничества</h2>
+        <div class="steps">
+            <div class="step"><div class="step-number">1</div><h4>📝 Заявка</h4><p>Оставьте заявку на сайте или по телефону</p></div>
+            <div class="step"><div class="step-number">2</div><h4>🚗 Выезд</h4><p>Мастер приедет к вам в течение 30 минут</p></div>
+            <div class="step"><div class="step-number">3</div><h4>🔬 Диагностика</h4><p>Бесплатно выявим поломку</p></div>
+            <div class="step"><div class="step-number">4</div><h4>✍️ Договор</h4><p>Согласуем стоимость и сроки (если необходимо)</p></div>
+            <div class="step"><div class="step-number">5</div><h4>⚙️ Ремонт</h4><p>Проведём ремонт и тестирование</p></div>
+            <div class="step"><div class="step-number">6</div><h4>💳 Оплата</h4><p>После проверки, только за результат</p></div>
+        </div>
+
+        <!-- Отзывы — в стиле реальных отзывов -->
+        <h2>⭐ Что о нас говорят клиенты</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-avatar">А</div>
+                    <div class="review-info">
+                        <div class="review-name">Андрей С.</div>
+                        <div class="review-date">14 апреля 2026</div>
+                        <div class="review-rating">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-text">"У моего компьютера перестал включаться монитор и сильно шумел кулер. В сервисе провели полную диагностику, почистили от пыли, заменили термопасту и переустановили драйверы. Результат превзошел ожидания — компьютер работает тихо и быстро, как новый. Очень доволен качеством и обслуживанием!"</div>
+                <span class="review-device">🔧 Компьютер</span>
+                <div class="admin-reply"><strong>📌 Ответ администратора:</strong> Андрей, благодарим за положительный отзыв! Рады, что смогли помочь.</div>
+            </div>
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-avatar">Д</div>
+                    <div class="review-info">
+                        <div class="review-name">Диана А.</div>
+                        <div class="review-date">2 апреля 2026</div>
+                        <div class="review-rating">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-text">У моего телевизора Samsung перестала работать подсветка — экран стал почти чёрным. Мастера приехали на дом, быстро диагностировали проблему и заменили светодиодную ленту. Теперь картинка яркая, сочная, как в первый день покупки. Даже цвета стали лучше! Большое спасибо за оперативность и аккуратный ремонт.</div>
+                <span class="review-device">📺 Телевизор Samsung</span>
+                <div class="admin-reply"><strong>📌 Ответ администратора:</strong> Диана, спасибо! Обращайтесь, если понадобится помощь.</div>
+            </div>
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-avatar">М</div>
+                    <div class="review-info">
+                        <div class="review-name">Михаил</div>
+                        <div class="review-date">28 марта 2026</div>
+                        <div class="review-rating">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-text">"Заказал настройку роутера TP-Link — никак не мог разобраться с Wi-Fi и подключением устройств. Специалисты быстро приехали, всё настроили, обновили прошивку и настроили родительский контроль. Отдельное спасибо мастеру Михаилу за то, что объяснил, как пользоваться, и оставил инструкцию! Очень доволен сервисом, интернет теперь летает без обрывов."</div>
+                <span class="review-device">📡 Роутер</span>
+                <div class="admin-reply"><strong>📌 Ответ администратора:</strong> Михаил, благодарим! Всегда рады помочь.</div>
+            </div>
+        </div>
+
+
+
+<footer>
+    <div class="container">
+        <p>© 2026 Сервисный центр — ремонт техники в Нижнекамске</p>
+        <p style="font-size:0.85rem">Все цены указаны как информационные, точную стоимость уточняйте у менеджера</p>
+    </div>
+</footer>
+
+<div id="toast" class="toast">✅ Заявка успешно отправлена! Оператор свяжется с вами.</div>
+
+<script>
+    // ========== ОТПРАВКА НА EMAIL ЧЕРЕЗ FORMSUBMIT.IO ==========
+    // Адрес вашей почты
+    const YOUR_EMAIL = "anisimovn868@gmail.com";
+    
+    // Функция отправки данных на email
+    async function sendToEmail(formData, formType) {
+        // Формируем HTML-письмо
+        let message = `<h2>Новая заявка с сайта (${formType})</h2>`;
+        for (let [key, value] of formData.entries()) {
+            message += `<p><strong>${key}:</strong> ${value}</p>`;
+        }
+        message += `<p><strong>Время отправки:</strong> ${new Date().toLocaleString()}</p>`;
+        
+        // Отправляем через FormSubmit (бесплатный сервис)
+        const formSubmitUrl = "https://formsubmit.co/ajax/" + YOUR_EMAIL;
+        
+        try {
+            const response = await fetch(formSubmitUrl, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: `📱 Новая заявка с сайта - ${formType}`,
+                    _template: "table",
+                    _captcha: "false",
+                    message: message,
+                    ...Object.fromEntries(formData)
+                })
+            });
+            
+            if (response.ok) {
+                return true;
+            } else {
+                console.error("Ошибка отправки:", response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error("Ошибка сети:", error);
+            return false;
+        }
+    }
+    
+    // Показ уведомления
+    const toast = document.getElementById('toast');
+    function showToast() {
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+    
+    // ========== ОБРАБОТКА БЫСТРОЙ ФОРМЫ ==========
+    const quickForm = document.getElementById('quickForm');
+    
+    quickForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('quickName').value.trim();
+        const phone = document.getElementById('quickPhone').value.trim();
+        const device = document.getElementById('quickDevice').value;
+        const problem = document.getElementById('quickProblem').value.trim();
+        const desc = document.getElementById('quickDesc').value.trim();
+        
+        if (!name || !phone) {
+            alert('Пожалуйста, заполните имя и телефон');
+            return;
+        }
+        if (!device) {
+            alert('Пожалуйста, выберите тип техники');
+            return;
+        }
+        
+        // Собираем данные для отправки
+        const formData = new FormData();
+        formData.append("Тип формы", "Быстрая заявка");
+        formData.append("Имя", name);
+        formData.append("Телефон", phone);
+        formData.append("Устройство", device);
+        formData.append("Краткая проблема", problem || "не указано");
+        formData.append("Подробное описание", desc || "не указано");
+        
+        // Отправляем на email
+        const sent = await sendToEmail(formData, "Быстрая заявка");
+        
+        if (sent) {
+            showToast();
+            quickForm.reset();
+        } else {
+            alert("Ошибка отправки. Пожалуйста, попробуйте позже или позвоните нам.");
+        }
+    });
+    
+    // ========== ОБРАБОТКА ПОЛНОЙ ФОРМЫ ==========
+    const mainForm = document.getElementById('callbackForm');
+    
+    mainForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const device = document.getElementById('deviceType').value;
+        const problem = document.getElementById('problem').value.trim();
+        const description = document.getElementById('description').value.trim();
+        
+        if (!name || !phone) {
+            alert('Пожалуйста, заполните имя и телефон');
+            return;
+        }
+        if (!device) {
+            alert('Пожалуйста, выберите тип техники');
+            return;
+        }
+        if (!problem) {
+            alert('Пожалуйста, укажите, что сломано');
+            return;
+        }
+        
+        // Собираем данные для отправки
+        const formData = new FormData();
+        formData.append("Тип формы", "Полная заявка");
+        formData.append("Имя", name);
+        formData.append("Телефон", phone);
+        formData.append("Тип техники", device);
+        formData.append("Что сломано", problem);
+        formData.append("Подробное описание", description || "не указано");
+        
+        // Отправляем на email
+        const sent = await sendToEmail(formData, "Полная заявка");
+        
+        if (sent) {
+            showToast();
+            mainForm.reset();
+        } else {
+            alert("Ошибка отправки. Пожалуйста, попробуйте позже или позвоните нам.");
+        }
+    });
+</script>
+
+</body>
+</html>
